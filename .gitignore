@@ -17,6 +17,7 @@ invesalius/reader/*.log
 invesalius/reader/*.pyc
 
 .idea
+out*/
 
 *.pyc
 *.swp

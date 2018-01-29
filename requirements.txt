@@ -4,6 +4,7 @@ Scipy
 Pillow
 Matplotlib
 scikit-image
+SimpleITK
 Nibabel
 PySerial
 PSUtil

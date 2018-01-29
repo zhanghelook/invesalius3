@@ -1,11 +1,11 @@
 #!/usr/bin/python
-#--------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 # Software:     InVesalius - Software de Reconstrucao 3D de Imagens Medicas
 # Copyright:    (C) 2001  Centro de Pesquisas Renato Archer
 # Homepage:     http://www.softwarepublico.gov.br
 # Contact:      invesalius@cti.gov.br
 # License:      GNU - GPL 2 (LICENSE.txt/LICENCA.txt)
-#--------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 #    Este programa e software livre; voce pode redistribui-lo e/ou
 #    modifica-lo sob os termos da Licenca Publica Geral GNU, conforme
 #    publicada pela Free Software Foundation; de acordo com a versao 2
@@ -16,7 +16,7 @@
 #    COMERCIALIZACAO ou de ADEQUACAO A QUALQUER PROPOSITO EM
 #    PARTICULAR. Consulte a Licenca Publica Geral GNU para obter mais
 #    detalhes.
-#-------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 
 
 import multiprocessing
@@ -33,21 +33,22 @@ if sys.platform == 'win32':
 else:
     if sys.platform != 'darwin':
         import wxversion
-        #wxversion.ensureMinimal('2.8-unicode', optionsRequired=True)
-        #wxversion.select('2.8-unicode', optionsRequired=True)
+
+        # wxversion.ensureMinimal('2.8-unicode', optionsRequired=True)
+        # wxversion.select('2.8-unicode', optionsRequired=True)
         wxversion.ensureMinimal('3.0')
-        
+
 import wx
-#from wx.lib.pubsub import setupv1 #new wx
-from wx.lib.pubsub import setuparg1# as psv1
-#from wx.lib.pubsub import Publisher 
-#import wx.lib.pubsub as ps
+# from wx.lib.pubsub import setupv1 #new wx
+from wx.lib.pubsub import setuparg1  # as psv1
+# from wx.lib.pubsub import Publisher
+# import wx.lib.pubsub as ps
 from wx.lib.pubsub import pub as Publisher
 
-#import wx.lib.agw.advancedsplash as agw
-#if sys.platform == 'linux2':
+# import wx.lib.agw.advancedsplash as agw
+# if sys.platform == 'linux2':
 #    _SplashScreen = agw.AdvancedSplash
-#else:
+# else:
 #    if sys.platform != 'darwin':
 #        _SplashScreen = wx.SplashScreen
 
@@ -61,6 +62,7 @@ FS_ENCODE = sys.getfilesystemencoding()
 
 if sys.platform == 'win32':
     from invesalius.expanduser import expand_user
+
     try:
         USER_DIR = expand_user()
     except:
@@ -73,6 +75,7 @@ USER_PRESET_DIR = os.path.join(USER_INV_DIR, u'presets')
 USER_RAYCASTING_PRESETS_DIRECTORY = os.path.join(USER_PRESET_DIR, u'raycasting')
 USER_LOG_DIR = os.path.join(USER_INV_DIR, u'logs')
 
+
 # ------------------------------------------------------------------
 
 
@@ -80,18 +83,19 @@ class InVesalius(wx.App):
     """
     InVesalius wxPython application class.
     """
+
     def OnInit(self):
         """
         Initialize splash screen and main frame.
         """
-        
+
         from multiprocessing import freeze_support
         freeze_support()
 
         self.SetAppName("InVesalius 3")
         self.splash = SplashScreen()
         self.splash.Show()
-        wx.CallLater(1000,self.Startup2)
+        wx.CallLater(1000, self.Startup2)
 
         return True
 
@@ -109,12 +113,14 @@ class InVesalius(wx.App):
         self.frame.Show()
         self.frame.Raise()
 
+
 # ------------------------------------------------------------------
 
 class SplashScreen(wx.SplashScreen):
     """
     Splash screen to be shown in InVesalius initialization.
     """
+
     def __init__(self):
         # Splash screen image will depend on currently language
         lang = False
@@ -162,7 +168,7 @@ class SplashScreen(wx.SplashScreen):
                     invdir = os.path.join(homedir, ".invesalius")
                     shutil.rmtree(invdir)
                     sys.exit()
-                    
+
         # Session file should be created... So we set the recent
         # choosen language
         if (create_session):
@@ -172,7 +178,6 @@ class SplashScreen(wx.SplashScreen):
 
         session.SaveConfigFileBackup()
 
-           
         # Only after language was defined, splash screen will be
         # shown
         if lang:
@@ -188,18 +193,18 @@ class SplashScreen(wx.SplashScreen):
             else:
                 icon_file = "splash_" + lang + ".png"
 
-            if hasattr(sys,"frozen") and (sys.frozen == "windows_exe"\
-                                        or sys.frozen == "console_exe"):
+            if hasattr(sys, "frozen") and (sys.frozen == "windows_exe" \
+                                           or sys.frozen == "console_exe"):
                 abs_file_path = os.path.abspath(".." + os.sep)
                 path = abs_file_path
                 path = os.path.join(path, 'icons', icon_file)
-            
+
             else:
 
-                path = os.path.join(".","icons", icon_file)
+                path = os.path.join(".", "icons", icon_file)
                 if not os.path.exists(path):
                     path = os.path.join(".", "icons", "splash_en.png")
-				
+
             bmp = wx.Image(path).ConvertToBitmap()
 
             style = wx.SPLASH_TIMEOUT | wx.SPLASH_CENTRE_ON_SCREEN
@@ -211,7 +216,7 @@ class SplashScreen(wx.SplashScreen):
                                      parent=None)
             self.Bind(wx.EVT_CLOSE, self.OnClose)
             wx.Yield()
-            wx.CallLater(200,self.Startup)
+            wx.CallLater(200, self.Startup)
 
     def Startup(self):
         # Importing takes sometime, therefore it will be done
@@ -219,10 +224,10 @@ class SplashScreen(wx.SplashScreen):
         from invesalius.gui.frame import Frame
         from invesalius.control import Controller
         from invesalius.project import Project
-        
+
         self.main = Frame(None)
         self.control = Controller(self.main)
-        
+
         self.fc = wx.FutureCall(1, self.ShowMain)
         options, args = parse_comand_line()
         wx.FutureCall(1, use_cmd_optargs, options, args)
@@ -269,6 +274,7 @@ def non_gui_startup(options, args):
 
     use_cmd_optargs(options, args)
 
+
 # ------------------------------------------------------------------
 
 
@@ -277,7 +283,6 @@ def parse_comand_line():
     Handle command line arguments.
     """
     session = ses.Session()
-
 
     # Parse command line arguments
     parser = op.OptionParser()
@@ -355,7 +360,7 @@ def use_cmd_optargs(options, args):
                 Publisher.sendMessage('Open project', path)
                 check_for_export(options)
                 return True
-            
+
             file = arg.decode(sys.stdin.encoding)
             if os.path.isfile(file):
                 path = os.path.abspath(file)
@@ -434,6 +439,7 @@ def print_events(data):
     """
     utils.debug(data.topic)
 
+
 def main():
     """
     Initialize InVesalius GUI
@@ -446,19 +452,19 @@ def main():
         application = InVesalius(0)
         application.MainLoop()
 
-if __name__ == '__main__':
-    #Is needed because of pyinstaller
-    multiprocessing.freeze_support()
-    
-    #Needed in win 32 exe
-    if hasattr(sys,"frozen") and sys.platform.startswith('win'):
 
-        #Click in the .inv3 file support
+if __name__ == '__main__':
+    # Is needed because of pyinstaller
+    multiprocessing.freeze_support()
+
+    # Needed in win 32 exe
+    if hasattr(sys, "frozen") and sys.platform.startswith('win'):
+        # Click in the .inv3 file support
         root = _winreg.HKEY_CLASSES_ROOT
         key = "InVesalius 3.1\InstallationDir"
-        hKey = _winreg.OpenKey (root, key, 0, _winreg.KEY_READ)
-        value, type_ = _winreg.QueryValueEx (hKey, "")
-        path = os.path.join(value,'dist')
+        hKey = _winreg.OpenKey(root, key, 0, _winreg.KEY_READ)
+        value, type_ = _winreg.QueryValueEx(hKey, "")
+        path = os.path.join(value, 'dist')
 
         os.chdir(path)
 
@@ -470,7 +476,7 @@ if __name__ == '__main__':
     if not os.path.isdir(USER_LOG_DIR):
         os.makedirs(USER_LOG_DIR)
 
-    if hasattr(sys,"frozen") and sys.frozen == "windows_exe":
+    if hasattr(sys, "frozen") and sys.frozen == "windows_exe":
         # Set system standard error output to file
         path = os.path.join(USER_LOG_DIR, u"stderr.log")
         sys.stderr = open(path, "w")
@@ -480,7 +486,5 @@ if __name__ == '__main__':
     sys.path.insert(0, '.')
     sys.path.append(".")
 
-
     # Init application
     main()
-

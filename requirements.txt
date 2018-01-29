@@ -1,0 +1,12 @@
+#wxpython
+Numpy
+Scipy
+Pillow
+Matplotlib
+scikit-image
+Nibabel
+PySerial
+PSUtil
+ConfigParser
+cython
+futures
